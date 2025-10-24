@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import { saveEvent, getCampaigns } from './database.js'
+import './worker.js'
 
 const app = express()
 const PORT = 3000;

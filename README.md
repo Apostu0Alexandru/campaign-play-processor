@@ -23,3 +23,11 @@
    Now i have to think about the worker job. 
    Basically the whole async processing logic is about the endpoint post sending requests, the events saved in the database and just accumulate there, waiting for the worker. The worker will run async and will process each event from the queue. The worker has nothing to do with the api calls, so that s why it will run independetely. 
    So the background process is done by this worker so it will be by default async arhitecture.
+
+   I did the other 2 db functions that the worker will use. - getUnproccesedEvents, markProcessedEvents
+   Now im coding the worker -- > setInterval()
+
+   First the worker ask the db for unprocessed events -> getUnprocessedEvents() -> check for empty arrays here 
+   -> iterate throughout each event to process it -> markProcessedEvents()
+
+   I did the worker logic now, and tested it with postman. Added usefull logs. Backend functional but requires some error handling.

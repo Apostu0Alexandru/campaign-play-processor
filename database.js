@@ -13,9 +13,10 @@ db.exec(`
     )
 `);
 
+// Functions that the api s are made with. 
 function saveEvent(screenId, campaignId, timestamp) {
     const stmt = db.prepare(
-        'INSERT INTO events ( screen_id, campaign_id, timestamp, processed) VALUES (?, ?, ?, 0)'
+        'INSERT INTO events ( screen_id, campaign_id, timestamp, processed) VALUES (?, ?, ?, 0)' // parameter binding
     );
     const result = stmt.run(screenId, campaignId, timestamp);
     return result.lastInsertRowid;
@@ -28,9 +29,30 @@ function getCampaigns() {
         FROM events 
         WHERE processed = 1
         GROUP BY campaign_id
-        ORDER BY play_count`);
+        ORDER BY play_count DESC`);
     const result = stmt.all();
     return result;
 }
 
-export {db, saveEvent, getCampaigns};
+// Worker functions - a function to get the events that are not flaged as processed and the other
+// to mark them as processed. These functions will be used by the worker.
+function getUnproccesedEvents(){
+    const stmt = db.prepare(`
+        SELECT *
+        FROM events
+        WHERE processed = 0`);
+    
+    const result = stmt.all();
+    return result;
+}
+
+
+function markProcessedEvents(idEvent){
+    const stmt = db.prepare(`UPDATE events SET processed = 1 WHERE id = ? `); // parameter biding
+
+    const result = stmt.run(idEvent);
+    return result;
+}
+
+
+export {db, saveEvent, getCampaigns, getUnproccesedEvents, markProcessedEvents};
