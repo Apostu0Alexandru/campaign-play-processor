@@ -9,14 +9,16 @@ db.exec(`
     campaign_id TEXT NOT NULL,
     timestamp DATETIME NOT NULL, 
     processed BOOLEAN DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
-`)
+`);
 
 function saveEvent(screenId, campaignId, timestamp) {
-    const stmt = db.prepare('INSERT INTO events ( screen_id, campaign_id, timestamp, processed VALUES (?, ?, ?, 0)');
+    const stmt = db.prepare(
+        'INSERT INTO events ( screen_id, campaign_id, timestamp, processed) VALUES (?, ?, ?, 0)'
+    );
     const result = stmt.run(screenId, campaignId, timestamp);
-    return result.lastInsertRowid
+    return result.lastInsertRowid;
 }
 
 
@@ -28,7 +30,7 @@ function getCampaigns() {
         GROUP BY campaign_id
         ORDER BY play_count`);
     const result = stmt.all();
-    return result
+    return result;
 }
 
-export {db, saveEvent, getCampaigns}
+export {db, saveEvent, getCampaigns};
