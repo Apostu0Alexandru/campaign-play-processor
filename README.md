@@ -31,3 +31,10 @@
    -> iterate throughout each event to process it -> markProcessedEvents()
 
    I did the worker logic now, and tested it with postman. Added usefull logs. Backend functional but requires some error handling.
+
+   Now i am moving to the frontend
+   I chose react through vite
+   I kept all of the 3 core requirments into the App.jsx. till now i did the first one to display campaigns and play counts by accesing the backend 2 functions that the worker is using. I did the second requirment, which is having a button that simulates an event. 
+
+   Completed the core requirements. Added the 3 function of the frontend, the autorefresing feature with setInterval which calls 
+   the displayCampaigns every 3 seconds, so the user doesnt need to refresh in order to see the counts of events. 
