@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import "./App.css";
 
 export default function App() {
   const [campaigns, setCampaigns] = useState([]);
@@ -46,19 +47,21 @@ export default function App() {
   }
 
   return (
-    <>
+    <div className="screen">
+      <h1>CAMPAIGNS</h1>
+
       <div>
         {campaigns.map((element) => (
-          <div key={element.campaign_id}>
-            Id : {element.campaign_id}
-            Play count : {element.play_count}
+          <div key={element.campaign_id} className="campaign-card">
+            <span>{element.campaign_id}</span>
+            <span className="play-count">{element.play_count}</span>
           </div>
         ))}
       </div>
-      <button onClick={playButton}>
-        Press to simulate an event!
-      </button>
-    </>
-  )
 
+      <button onClick={playButton} className="simulate-button">
+        SIMULATE
+      </button>
+    </div>
+  )
 }

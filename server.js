@@ -10,21 +10,46 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/events', (req, res) => {
-    const { screen_id, campaign_id, timestamp } = req.body;
-    const eventId = saveEvent(screen_id, campaign_id, timestamp);
+    try {
+        const { screen_id, campaign_id, timestamp } = req.body;
 
-    res.status(201).json({
-        succes: true,
-        eventId,
-        message: "Event saved",
-    })
+        // error handling
+        if (!screen_id || !campaign_id || !timestamp) {
+            return res.status(400).json({
+                error: "Check the required fields",
+                required: ['screen_id', 'campaign_id', 'timestamp']
+            });
+        }
+
+        // save event
+        const eventId = saveEvent(screen_id, campaign_id, timestamp);
+
+        res.status(201).json({
+            success: true,
+            eventId,
+            message: "Event saved",
+        })
+    } catch (error) {
+        console.log("Failed to access the api request", error);
+        res.status(500).json({
+            error: "Failed saving event",
+            message: error.message
+        })
+    }
 });
 
 app.get('/campaigns', (req, res) => {
-    const campaigns = getCampaigns();
-    res.json({ campaigns })
+    try {
+        const campaigns = getCampaigns();
+        res.json({ campaigns });
+    } catch (error) {
+        res.status(500).json({
+            error: "Failed to get the campaigns info",
+            message: error.message
+        })
+    }
 });
 
-app.listen(PORT,()=>{
+app.listen(PORT, () => {
     console.log("runnnig");
 });

@@ -29,11 +29,14 @@ The query `getCampaigns()` counts rows where `processed = 1` grouped by campaign
 **Async Processing: setInterval polling**
 Worker runs via `setInterval` every 5 seconds, independent of API requests. Demonstrates async job handling without external dependencies like Redis or Bull. API returns immediately, processing happens later on worker's schedule. Clean separation between request handling and work execution.
 
+**Error Handling Strategy**
+Database functions catch errors, log with context, and propagate to callers. Express endpoints have try-catch blocks that return appropriate HTTP status codes (400 for validation, 500 for server errors). Worker uses nested try-catch to handle individual event failures without stopping batch processing. Failed events remain unprocessed and retry on next cycle.
+
 **Why not separate campaigns table initially**
 Started simple with one table. GROUP BY query on events table is fast enough for expected scale. Could add denormalized campaigns table for O(1) reads if scaling to millions of events, but unnecessary complexity for this demo challenge. 
 
 **Frontend: React with Vite**
-React for component-based architecture and reactive state management. Vite for fast dev setup and hot reloading. All three core requirements in single App.jsx component.
+React for component-based architecture and reactive state management. Vite for fast dev setup and hot reloading. All three core requirements in single App.jsx component. Minimalist design inspired by early computing displays and terminal interfaces, using google fonts Space Mono and Press Start 2P.
 
 ## Implementation
 
@@ -105,7 +108,6 @@ Dev server runs on http://localhost:5173
 **With more time:**
 - Separate campaigns table for having less play counts reads (O(1) reads vs O(n) counting)
 - Add indexes on campaign_id and processed flag for query optimization
-- Error handling and retry logic in worker for failed processing
 - Chart visualization of play counts using Recharts or Chart.js
 - WebSocket connection for instant updates instead of polling
 - TypeScript for type safety across full stack
@@ -130,9 +132,9 @@ If scaling to millions of events, would implement:
 
 ## Time Spent
 
-- Database design and backend setup: ~2 hour
+- Database design and backend setup: ~2.5 hours
 - Worker implementation and testing: ~1 hour
-- Frontend React implementation: ~1.5 hours
+- Frontend React implementation: ~2.5 hours
 - Testing and documentation: ~1.5 hour 
 
-Total: ~6 hours
+Total: ~7.5 hours

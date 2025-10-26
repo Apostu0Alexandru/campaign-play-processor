@@ -15,44 +15,66 @@ db.exec(`
 
 // Functions that the api s are made with. 
 function saveEvent(screenId, campaignId, timestamp) {
-    const stmt = db.prepare(
-        'INSERT INTO events ( screen_id, campaign_id, timestamp, processed) VALUES (?, ?, ?, 0)' // parameter binding
-    );
-    const result = stmt.run(screenId, campaignId, timestamp);
-    return result.lastInsertRowid;
+    try {
+        const stmt = db.prepare(
+            'INSERT INTO events ( screen_id, campaign_id, timestamp, processed) VALUES (?, ?, ?, 0)' // parameter binding
+        );
+        const result = stmt.run(screenId, campaignId, timestamp);
+        return result.lastInsertRowid;
+
+    } catch (error) {
+        console.error("Failed saving event: ", { screenId, campaignId, timestamp, error: error.message });
+        throw error;
+    }
 }
 
 
 function getCampaigns() {
-    const stmt = db.prepare(`
+    try {
+        const stmt = db.prepare(`
         SELECT campaign_id, COUNT(*) as play_count
         FROM events 
         WHERE processed = 1
         GROUP BY campaign_id
         ORDER BY play_count DESC`);
-    const result = stmt.all();
-    return result;
+        const result = stmt.all();
+        return result;
+    } catch (error) {
+        console.error("Failed to get campaigns", { error: error.message });
+        throw error;
+    }
+
 }
 
 // Worker functions - a function to get the events that are not flaged as processed and the other
 // to mark them as processed. These functions will be used by the worker.
-function getUnproccesedEvents(){
-    const stmt = db.prepare(`
+function getUnproccesedEvents() {
+    try {
+        const stmt = db.prepare(`
         SELECT *
         FROM events
         WHERE processed = 0`);
-    
-    const result = stmt.all();
-    return result;
+
+        const result = stmt.all();
+        return result;
+    } catch (error) {
+        console.error("Failed to get unprocessed events: ", { error: error.message });
+        throw error;
+    }
 }
 
 
-function markProcessedEvents(idEvent){
-    const stmt = db.prepare(`UPDATE events SET processed = 1 WHERE id = ? `); // parameter biding
+function markProcessedEvents(idEvent) {
+    try {
+        const stmt = db.prepare(`UPDATE events SET processed = 1 WHERE id = ? `); // parameter biding
 
-    const result = stmt.run(idEvent);
-    return result;
+        const result = stmt.run(idEvent);
+        return result;
+    } catch (error) {
+        console.error("Failed to mark processed events: ", { idEvent, error: error.message });
+        throw error;
+    }
 }
 
 
-export {db, saveEvent, getCampaigns, getUnproccesedEvents, markProcessedEvents};
+export { db, saveEvent, getCampaigns, getUnproccesedEvents, markProcessedEvents };
