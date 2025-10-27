@@ -1,8 +1,17 @@
 import { getUnproccesedEvents, markProcessedEvents } from "./database.js";
+import { checkPausedWorker } from "./server.js";
 
 function handleEventProcessing() {
     try {
+        let isCurrentlyPaused = checkPausedWorker();
+
+        if (isCurrentlyPaused){
+            console.log("The worker is currently paused: It is still checking the queue but chosses not to process anything untill resume");
+            return;
+        }
+
         const events = getUnproccesedEvents();
+
         if (events.length === 0) {
             console.log("No events to process");
             return;
@@ -18,7 +27,7 @@ function handleEventProcessing() {
                 console.log(`Processed event ${element.id} for the campaign ${element.campaign_id}`);
                 succesCount++;
             } catch (error) {
-                console.log("Failed to get the work done for the event:", element.campaign_id, " Error:",error);
+                console.log("Failed to process the event:", element.campaign_id, " Error:", error);
                 failedCount++;
             }
         });

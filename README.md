@@ -29,6 +29,9 @@ The query `getCampaigns()` counts rows where `processed = 1` grouped by campaign
 **Async Processing: setInterval polling**
 Worker runs via `setInterval` every 5 seconds, independent of API requests. Demonstrates async job handling without external dependencies like Redis or Bull. API returns immediately, processing happens later on worker's schedule. Clean separation between request handling and work execution.
 
+**Toggle resume/pause**
+Complete data flow approach strategy implements the feature of pausing or resuming the worker. Pause worker means it is schedulling but not processing. After resuming, the worker will be processing the jobs like before.
+
 **Error Handling Strategy**
 Database functions catch errors, log with context, and propagate to callers. Express endpoints have try-catch blocks that return appropriate HTTP status codes (400 for validation, 500 for server errors). Worker uses nested try-catch to handle individual event failures without stopping batch processing. Failed events remain unprocessed and retry on next cycle.
 
@@ -114,12 +117,10 @@ Dev server runs on http://localhost:5173
 - Comprehensive test suite (unit tests for DB operations, integration tests for API, E2E tests)
 - Rate limiting on POST /events endpoint
 - Docker containerization for consistent deployment
-- Deploy backend to Render/Fly.io, frontend to Vercel
 - Batch processing limits in worker (max 100 events per cycle) -> here using a production framework such as BullMQ
-- Multiple campaign support in simulate button (randomize campaign_id)
 - Loading states and error messages in frontend
 - Impressions per screen breakdown 
-- Toggle to pause/resume worker processing
+
 
 **Architectural considerations for scale:**
 If scaling to millions of events, would implement:

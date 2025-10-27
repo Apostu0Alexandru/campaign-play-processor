@@ -76,5 +76,4 @@ function markProcessedEvents(idEvent) {
     }
 }
 
-
 export { db, saveEvent, getCampaigns, getUnproccesedEvents, markProcessedEvents };

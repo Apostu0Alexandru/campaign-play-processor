@@ -37,22 +37,51 @@ body {
   color: #00ff00;
 }
 
+.worker-pause{
+  color: #00ff00;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #222;
+  font-size: 0.9rem;
+}
+
 .simulate-button {
   position: absolute;
-  bottom: 0.7rem;
+  bottom: 0.4rem;
   right: 2rem;
-  width: 90px;
-  height: 90px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background: #000;
   border: 3px solid #00ff00;
   color: #fff;
   font-family: 'Press Start 2P', cursive;
-  font-size: 0.45rem;
+  font-size: 0.35rem;
   cursor: pointer;
 }
 
 .simulate-button:hover {
+  background: #00ff00;
+  color: #000;
+}
+
+.worker-button{
+  position: absolute;
+  bottom: 0.4rem;
+  right: 7rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #000;
+  border: 3px solid #00ff00;
+  color: #fff;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.35rem;
+  cursor: pointer;
+}
+
+.worker-button:hover {
   background: #00ff00;
   color: #000;
 }

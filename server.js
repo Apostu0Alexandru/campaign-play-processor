@@ -4,10 +4,24 @@ import { saveEvent, getCampaigns } from './database.js'
 import './worker.js'
 
 const app = express()
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+
+let isWorkerPaused = false;
+
+function checkPausedWorker() {
+    return isWorkerPaused;
+}
+
+function pauseWorker() {
+    isWorkerPaused = true;
+}
+
+function resumeWorker() {
+    isWorkerPaused = false;
+}
 
 app.post('/events', (req, res) => {
     try {
@@ -50,6 +64,45 @@ app.get('/campaigns', (req, res) => {
     }
 });
 
+app.post('/worker/pause', (req, res) => {
+    try {
+        pauseWorker();
+        res.json({ status: true, paused: isWorkerPaused });
+    } catch (error) {
+        res.status(500).json({
+            error: "Failed to pause the worker",
+            message: error.message
+        })
+    }
+})
+
+app.post('/worker/resume', (req, res) => {
+    try {
+        resumeWorker();
+        res.json({ status: true, paused: isWorkerPaused });
+    } catch (error) {
+        res.status(500).json({
+            error: "Failed to resume the worker",
+            message: error.message
+        })
+    }
+})
+
+app.get('/worker/status', (req, res) => {
+    try {
+        const paused = checkPausedWorker();
+        res.json({ paused });
+    } catch (error) {
+        res.status(500).json({
+            error: "Failed to get the status of the worker",
+            message: error.message
+        })
+    }
+})
+
+
 app.listen(PORT, () => {
     console.log("runnnig");
 });
+
+export { checkPausedWorker, pauseWorker, resumeWorker }
