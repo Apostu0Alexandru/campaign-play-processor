@@ -10,7 +10,7 @@ export default function App() {
   useEffect(() => {
     const displayPlayCampaigns = async () => {
       try {
-        const response = await fetch("${import.meta.env.VITE_API_URL}/campaigns");
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/campaigns`);
 
         if (!response.ok) throw new Error('Failed');
         const data = await response.json();
@@ -33,7 +33,7 @@ export default function App() {
   useEffect(() => {
     const isWorkPaused = async () => {
       try {
-        const response = await fetch("${import.meta.env.VITE_API_URL}/worker/status");
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/worker/status`);
 
         if (!response.ok) throw new Error('Failed');
         const data = await response.json();
@@ -59,7 +59,7 @@ export default function App() {
       timestamp: timestamp,
     };
     try {
-      fetch("${import.meta.env.VITE_API_URL}/events", {
+      fetch(`${import.meta.env.VITE_API_URL}/events`, {
         method: "POST",
         body: JSON.stringify(event),
         headers: {
@@ -76,7 +76,7 @@ export default function App() {
   function workerButton() {
     try {
       if (isPaused) {
-        fetch("${import.meta.env.VITE_API_URL}/worker/resume", {
+        fetch(`${import.meta.env.VITE_API_URL}/worker/resume`, {
           method: "POST",
           headers: {
             "Content-type": "application/json; charset=UTF-8"
@@ -84,7 +84,7 @@ export default function App() {
         })
           .then(response => response.json()).then(data => setIsPaused(data.paused));
       } else {
-        fetch("${import.meta.env.VITE_API_URL}/worker/pause", {
+        fetch(`${import.meta.env.VITE_API_URL}/worker/pause`, {
           method: "POST",
           headers: {
             "Content-type": "application/json; charset=UTF-8"
